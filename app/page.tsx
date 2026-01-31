@@ -7,8 +7,9 @@ import {
   Github, Linkedin, Twitter, Mail, Phone, MapPin,
   CheckCircle2, LucideIcon
 } from 'lucide-react'
+import { ContactFormValue } from './types'
 
-interface FormData {
+interface FormValue {
   name: string
   email: string
   company: string
@@ -47,7 +48,7 @@ interface SocialLink {
 export default function Home() {
   const [darkMode, setDarkMode] = useState<boolean>(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false)
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<FormValue>({
     name: '',
     email: '',
     company: '',
@@ -62,15 +63,15 @@ export default function Home() {
     }
   }, [darkMode])
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    console.log('Form submitted:', formData)
-    alert('Thank you for your message! We\'ll get back to you soon.')
-    setFormData({ name: '', email: '', company: '', message: '' })
-  }
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+  const handleSubmit = async (e: FormData) => {
+    const value: ContactFormValue = Object.fromEntries(e.entries()) as ContactFormValue
+    await fetch('/api/send', {
+      method: 'POST',
+      headers: new Headers([
+        ['Content-Type', 'application/json']
+      ]),
+      body: JSON.stringify(value)
+    })
   }
 
   const services: Service[] = [
@@ -167,11 +168,11 @@ export default function Home() {
     }
   ]
 
-  const socialLinks: SocialLink[] = [
-    { icon: Github, href: '#', label: 'GitHub' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
-    { icon: Twitter, href: '#', label: 'Twitter' }
-  ]
+  // const socialLinks: SocialLink[] = [
+  //   { icon: Github, href: '#', label: 'GitHub' },
+  //   { icon: Linkedin, href: '#', label: 'LinkedIn' },
+  //   { icon: Twitter, href: '#', label: 'Twitter' }
+  // ]
 
   const stats = [
     { number: '50+', label: 'Projects Delivered' },
@@ -443,7 +444,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form action={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium mb-2">
                     Full Name *
@@ -453,8 +454,8 @@ export default function Home() {
                     id="name"
                     name="name"
                     required
-                    value={formData.name}
-                    onChange={handleChange}
+                    // value={formData.name}
+                    // onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition"
                     placeholder="John Doe"
                   />
@@ -469,8 +470,8 @@ export default function Home() {
                     id="email"
                     name="email"
                     required
-                    value={formData.email}
-                    onChange={handleChange}
+                    // value={formData.email}
+                    // onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition"
                     placeholder="john@company.com"
                   />
@@ -484,8 +485,8 @@ export default function Home() {
                     type="text"
                     id="company"
                     name="company"
-                    value={formData.company}
-                    onChange={handleChange}
+                    // value={formData.company}
+                    // onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition"
                     placeholder="Your Company"
                   />
@@ -499,8 +500,8 @@ export default function Home() {
                     id="message"
                     name="message"
                     required
-                    value={formData.message}
-                    onChange={handleChange}
+                    // value={formData.message}
+                    // onChange={handleChange}
                     rows={5}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition resize-none"
                     placeholder="Tell us about your project..."
@@ -533,7 +534,7 @@ export default function Home() {
                   <div>
                     <div className="font-semibold mb-1">Email</div>
                     <a href="mailto:info@proginmind.io" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
-                      valerii@proginmind.io
+                      info@proginmind.io
                     </a>
                   </div>
                 </div>
