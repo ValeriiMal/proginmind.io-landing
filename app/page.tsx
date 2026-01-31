@@ -454,8 +454,6 @@ export default function Home() {
                     id="name"
                     name="name"
                     required
-                    // value={formData.name}
-                    // onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition"
                     placeholder="John Doe"
                   />
@@ -470,8 +468,6 @@ export default function Home() {
                     id="email"
                     name="email"
                     required
-                    // value={formData.email}
-                    // onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition"
                     placeholder="john@company.com"
                   />
@@ -485,8 +481,6 @@ export default function Home() {
                     type="text"
                     id="company"
                     name="company"
-                    // value={formData.company}
-                    // onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition"
                     placeholder="Your Company"
                   />
@@ -494,14 +488,12 @@ export default function Home() {
 
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium mb-2">
-                    Project Details *
+                    Message *
                   </label>
                   <textarea
                     id="message"
                     name="message"
                     required
-                    // value={formData.message}
-                    // onChange={handleChange}
                     rows={5}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition resize-none"
                     placeholder="Tell us about your project..."
