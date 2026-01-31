@@ -7,6 +7,9 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'ProgInMind - Build. Scale. Deliver.',
   description: 'Custom web and mobile applications for startups and enterprises. Expert full-stack development, UI/UX design, and DevOps services.',
+  icons: {
+    icon: '/favicon.ico',
+  }
 }
 
 export default function RootLayout({
