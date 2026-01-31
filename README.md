@@ -35,7 +35,8 @@ npm start
 
 ## Tech Stack
 
-- Next.js 14 (App Router)
-- React 18
-- Tailwind CSS
+- Next.js 16.1.6 (App Router)
+- React 19
+- TypeScript 5.7
+- Tailwind CSS 3.4
 - Lucide React (for icons)

@@ -1,17 +1,53 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FormEvent, ChangeEvent } from 'react'
 import { 
   Moon, Sun, Menu, X, Code2, Layers, Cloud, 
   Rocket, Shield, Zap, ArrowRight, Star,
   Github, Linkedin, Twitter, Mail, Phone, MapPin,
-  CheckCircle2
+  CheckCircle2, LucideIcon
 } from 'lucide-react'
 
+interface FormData {
+  name: string
+  email: string
+  company: string
+  message: string
+}
+
+interface Service {
+  icon: LucideIcon
+  title: string
+  description: string
+  features: string[]
+}
+
+interface Project {
+  title: string
+  category: string
+  description: string
+  tech: string[]
+  image: string
+}
+
+interface Testimonial {
+  name: string
+  role: string
+  image: string
+  rating: number
+  text: string
+}
+
+interface SocialLink {
+  icon: LucideIcon
+  href: string
+  label: string
+}
+
 export default function Home() {
-  const [darkMode, setDarkMode] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [formData, setFormData] = useState({
+  const [darkMode, setDarkMode] = useState<boolean>(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false)
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     company: '',
@@ -26,16 +62,123 @@ export default function Home() {
     }
   }, [darkMode])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log('Form submitted:', formData)
     alert('Thank you for your message! We\'ll get back to you soon.')
     setFormData({ name: '', email: '', company: '', message: '' })
   }
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
+
+  const services: Service[] = [
+    {
+      icon: Code2,
+      title: 'Full-Stack Development',
+      description: 'End-to-end development with modern frameworks like React, Next.js, Node.js. We build scalable, maintainable applications.',
+      features: ['React & Next.js', 'Node.js', 'RESTful & GraphQL APIs', 'Database Design']
+    },
+    {
+      icon: Layers,
+      title: 'UI/UX Design',
+      description: 'Beautiful, intuitive interfaces that users love. We focus on user experience, accessibility, and conversion optimization.',
+      features: ['User Research', 'Wireframing & Prototyping', 'Visual Design', 'Usability Testing']
+    },
+    {
+      icon: Cloud,
+      title: 'DevOps & Cloud',
+      description: 'Automated deployments, CI/CD pipelines, and cloud infrastructure on AWS for maximum reliability.',
+      features: ['CI/CD Pipelines', 'Cloud Infrastructure', 'Monitoring & Logging', 'Security & Compliance']
+    },
+    {
+      icon: Zap,
+      title: 'Performance Optimization',
+      description: 'Lightning-fast applications with optimized code, efficient databases, and CDN integration for global reach.',
+      features: ['Code Optimization', 'Database Tuning', 'Caching Strategies', 'Load Balancing']
+    },
+    {
+      icon: Shield,
+      title: 'Security & Testing',
+      description: 'Comprehensive security audits, penetration testing, and automated test suites to ensure your application is rock-solid.',
+      features: ['Security Audits', 'Automated Testing', 'Code Reviews', 'Compliance']
+    },
+    {
+      icon: Rocket,
+      title: 'MVP Development',
+      description: 'Rapid prototyping and MVP development to validate your ideas quickly and efficiently, perfect for startups.',
+      features: ['Rapid Prototyping', 'Iterative Development', 'Scalable Architecture']
+    }
+  ]
+
+  const projects: Project[] = [
+    {
+      title: 'FinTech Dashboard',
+      category: 'Web Application',
+      description: 'A comprehensive financial analytics platform for real-time market data visualization and portfolio management.',
+      tech: ['React', 'Node.js', 'PostgreSQL', 'WebSocket'],
+      image: 'bg-gradient-to-br from-green-400 to-blue-500'
+    },
+    {
+      title: 'Healthcare Mobile App',
+      category: 'Mobile Application',
+      description: 'HIPAA-compliant telemedicine app connecting patients with healthcare providers for virtual consultations.',
+      tech: ['React Native', 'Firebase', 'Twilio', 'Stripe'],
+      image: 'bg-gradient-to-br from-purple-400 to-pink-500'
+    },
+    {
+      title: 'E-Commerce Platform',
+      category: 'Full-Stack',
+      description: 'Scalable multi-vendor marketplace with advanced search, real-time inventory, and secure payment processing.',
+      tech: ['Next.js', 'GraphQL', 'MongoDB', 'AWS'],
+      image: 'bg-gradient-to-br from-orange-400 to-red-500'
+    },
+    {
+      title: 'AI-Powered Analytics',
+      category: 'SaaS Product',
+      description: 'Machine learning platform for predictive analytics and business intelligence with custom dashboard builder.',
+      tech: ['Python', 'TensorFlow', 'React', 'Docker'],
+      image: 'bg-gradient-to-br from-cyan-400 to-blue-600'
+    }
+  ]
+
+  const testimonials: Testimonial[] = [
+    {
+      name: 'Sarah Johnson',
+      role: 'CEO, TechStart Inc',
+      image: '👩‍💼',
+      rating: 5,
+      text: 'Proginmind transformed our vision into reality. Their technical expertise and attention to detail exceeded our expectations. The app they built has been instrumental in our growth.'
+    },
+    {
+      name: 'Michael Chen',
+      role: 'CTO, DataFlow Systems',
+      image: '👨‍💻',
+      rating: 5,
+      text: 'Working with Proginmind was seamless. They delivered a scalable, performant solution on time and within budget. Their DevOps expertise saved us months of work.'
+    },
+    {
+      name: 'Emily Rodriguez',
+      role: 'Founder, HealthConnect',
+      image: '👩‍⚕️',
+      rating: 5,
+      text: 'The team at Proginmind understood our healthcare compliance needs perfectly. They built a secure, user-friendly platform that our patients and providers love.'
+    }
+  ]
+
+  const socialLinks: SocialLink[] = [
+    { icon: Github, href: '#', label: 'GitHub' },
+    { icon: Linkedin, href: '#', label: 'LinkedIn' },
+    { icon: Twitter, href: '#', label: 'Twitter' }
+  ]
+
+  const stats = [
+    { number: '50+', label: 'Projects Delivered' },
+    { number: '35+', label: 'Happy Clients' },
+    { number: '5+', label: 'Years Experience' },
+    { number: '98%', label: 'Client Satisfaction' }
+  ]
 
   return (
     <div className="min-h-screen">
@@ -48,7 +191,7 @@ export default function Home() {
                 <Code2 className="w-6 h-6 text-white" />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                ProgInMind
+                Proginmind
               </span>
             </div>
 
@@ -69,6 +212,7 @@ export default function Home() {
               <button
                 onClick={() => setDarkMode(!darkMode)}
                 className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                aria-label="Toggle dark mode"
               >
                 {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
@@ -85,12 +229,14 @@ export default function Home() {
               <button
                 onClick={() => setDarkMode(!darkMode)}
                 className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800"
+                aria-label="Toggle dark mode"
               >
                 {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800"
+                aria-label="Toggle mobile menu"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -164,12 +310,7 @@ export default function Home() {
 
           {/* Floating Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 max-w-5xl mx-auto">
-            {[
-              { number: '50+', label: 'Projects Delivered' },
-              { number: '35+', label: 'Happy Clients' },
-              { number: '5+', label: 'Years Experience' },
-              { number: '98%', label: 'Client Satisfaction' }
-            ].map((stat, index) => (
+            {stats.map((stat, index) => (
               <div
                 key={index}
                 className="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition animate-slide-up"
@@ -194,44 +335,7 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Code2,
-                title: 'Full-Stack Development',
-                description: 'End-to-end development with modern frameworks like React, Next.js, Node.js, and Python. We build scalable, maintainable applications.',
-                features: ['React & Next.js', 'Node.js & Python', 'RESTful & GraphQL APIs', 'Database Design']
-              },
-              {
-                icon: Layers,
-                title: 'UI/UX Design',
-                description: 'Beautiful, intuitive interfaces that users love. We focus on user experience, accessibility, and conversion optimization.',
-                features: ['User Research', 'Wireframing & Prototyping', 'Visual Design', 'Usability Testing']
-              },
-              {
-                icon: Cloud,
-                title: 'DevOps & Cloud',
-                description: 'Automated deployments, CI/CD pipelines, and cloud infrastructure on AWS, Google Cloud, and Azure for maximum reliability.',
-                features: ['CI/CD Pipelines', 'Cloud Infrastructure', 'Monitoring & Logging', 'Security & Compliance']
-              },
-              {
-                icon: Zap,
-                title: 'Performance Optimization',
-                description: 'Lightning-fast applications with optimized code, efficient databases, and CDN integration for global reach.',
-                features: ['Code Optimization', 'Database Tuning', 'Caching Strategies', 'Load Balancing']
-              },
-              {
-                icon: Shield,
-                title: 'Security & Testing',
-                description: 'Comprehensive security audits, penetration testing, and automated test suites to ensure your application is rock-solid.',
-                features: ['Security Audits', 'Automated Testing', 'Code Reviews', 'Compliance']
-              },
-              {
-                icon: Rocket,
-                title: 'MVP Development',
-                description: 'Rapid prototyping and MVP development to validate your ideas quickly and efficiently, perfect for startups.',
-                features: ['Rapid Prototyping', 'Market Validation', 'Iterative Development', 'Scalable Architecture']
-              }
-            ].map((service, index) => (
+            {services.map((service, index) => (
               <div
                 key={index}
                 className="group bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400"
@@ -264,36 +368,7 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {[
-              {
-                title: 'FinTech Dashboard',
-                category: 'Web Application',
-                description: 'A comprehensive financial analytics platform for real-time market data visualization and portfolio management.',
-                tech: ['React', 'Node.js', 'PostgreSQL', 'WebSocket'],
-                image: 'bg-gradient-to-br from-green-400 to-blue-500'
-              },
-              {
-                title: 'Healthcare Mobile App',
-                category: 'Mobile Application',
-                description: 'HIPAA-compliant telemedicine app connecting patients with healthcare providers for virtual consultations.',
-                tech: ['React Native', 'Firebase', 'Twilio', 'Stripe'],
-                image: 'bg-gradient-to-br from-purple-400 to-pink-500'
-              },
-              {
-                title: 'E-Commerce Platform',
-                category: 'Full-Stack',
-                description: 'Scalable multi-vendor marketplace with advanced search, real-time inventory, and secure payment processing.',
-                tech: ['Next.js', 'GraphQL', 'MongoDB', 'AWS'],
-                image: 'bg-gradient-to-br from-orange-400 to-red-500'
-              },
-              {
-                title: 'AI-Powered Analytics',
-                category: 'SaaS Product',
-                description: 'Machine learning platform for predictive analytics and business intelligence with custom dashboard builder.',
-                tech: ['Python', 'TensorFlow', 'React', 'Docker'],
-                image: 'bg-gradient-to-br from-cyan-400 to-blue-600'
-              }
-            ].map((project, index) => (
+            {projects.map((project, index) => (
               <div
                 key={index}
                 className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
@@ -331,29 +406,7 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: 'Sarah Johnson',
-                role: 'CEO, TechStart Inc',
-                image: '👩‍💼',
-                rating: 5,
-                text: 'ProgInMind transformed our vision into reality. Their technical expertise and attention to detail exceeded our expectations. The app they built has been instrumental in our growth.'
-              },
-              {
-                name: 'Michael Chen',
-                role: 'CTO, DataFlow Systems',
-                image: '👨‍💻',
-                rating: 5,
-                text: 'Working with ProgInMind was seamless. They delivered a scalable, performant solution on time and within budget. Their DevOps expertise saved us months of work.'
-              },
-              {
-                name: 'Emily Rodriguez',
-                role: 'Founder, HealthConnect',
-                image: '👩‍⚕️',
-                rating: 5,
-                text: 'The team at ProgInMind understood our healthcare compliance needs perfectly. They built a secure, user-friendly platform that our patients and providers love.'
-              }
-            ].map((testimonial, index) => (
+            {testimonials.map((testimonial, index) => (
               <div
                 key={index}
                 className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-xl transition"
@@ -363,7 +416,7 @@ export default function Home() {
                     <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
                   ))}
                 </div>
-                <p className="text-gray-700 dark:text-gray-300 mb-6 italic">"{testimonial.text}"</p>
+                <p className="text-gray-700 dark:text-gray-300 mb-6 italic">&quot;{testimonial.text}&quot;</p>
                 <div className="flex items-center">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-2xl mr-4">
                     {testimonial.image}
@@ -383,7 +436,7 @@ export default function Home() {
       <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Let's Build Something Great</h2>
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Let&apos;s Build Something Great</h2>
             <p className="text-xl text-gray-600 dark:text-gray-400">Get in touch to discuss your project</p>
           </div>
 
@@ -448,7 +501,7 @@ export default function Home() {
                     required
                     value={formData.message}
                     onChange={handleChange}
-                    rows="5"
+                    rows={5}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition resize-none"
                     placeholder="Tell us about your project..."
                   ></textarea>
@@ -468,7 +521,7 @@ export default function Home() {
               <div>
                 <h3 className="text-2xl font-bold mb-6">Get in Touch</h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-8">
-                  Have a project in mind? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+                  Have a project in mind? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
                 </p>
               </div>
 
@@ -479,8 +532,8 @@ export default function Home() {
                   </div>
                   <div>
                     <div className="font-semibold mb-1">Email</div>
-                    <a href="mailto:hello@proginmind.com" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
-                      hello@proginmind.com
+                    <a href="mailto:info@proginmind.io" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
+                      valerii@proginmind.io
                     </a>
                   </div>
                 </div>
@@ -492,12 +545,13 @@ export default function Home() {
                   <div>
                     <div className="font-semibold mb-1">Phone</div>
                     <a href="tel:+1234567890" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
-                      +1 (234) 567-890
+                      {/* +1 (234) 567-890 */}
+                      +48 694 594 416
                     </a>
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-4">
+                {/* <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
                     <MapPin className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                   </div>
@@ -508,17 +562,13 @@ export default function Home() {
                       San Francisco, CA 94102
                     </p>
                   </div>
-                </div>
+                </div> */}
               </div>
 
-              <div className="pt-8">
+              {/* <div className="pt-8">
                 <h4 className="font-semibold mb-4">Follow Us</h4>
                 <div className="flex space-x-4">
-                  {[
-                    { icon: Github, href: '#', label: 'GitHub' },
-                    { icon: Linkedin, href: '#', label: 'LinkedIn' },
-                    { icon: Twitter, href: '#', label: 'Twitter' }
-                  ].map((social, index) => (
+                  {socialLinks.map((social, index) => (
                     <a
                       key={index}
                       href={social.href}
@@ -529,7 +579,7 @@ export default function Home() {
                     </a>
                   ))}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -544,10 +594,10 @@ export default function Home() {
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                   <Code2 className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-xl font-bold text-white">ProgInMind</span>
+                <span className="text-xl font-bold text-white">Proginmind</span>
               </div>
               <p className="text-gray-400 mb-4">
-                Building exceptional digital experiences for startups and enterprises. Let's turn your vision into reality.
+                Building exceptional digital experiences for startups and enterprises. Let&apos;s turn your vision into reality.
               </p>
             </div>
 
@@ -573,7 +623,7 @@ export default function Home() {
           </div>
 
           <div className="border-t border-gray-800 pt-8 text-center text-gray-500">
-            <p>&copy; {new Date().getFullYear()} ProgInMind. All rights reserved. Built with Next.js & Tailwind CSS.</p>
+            <p>&copy; {new Date().getFullYear()} Proginmind. All rights reserved.</p>
           </div>
         </div>
       </footer>
