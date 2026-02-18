@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, FormEvent, ChangeEvent } from 'react'
+import { useState, useEffect, useRef, FormEvent, ChangeEvent } from 'react'
 import { 
   Moon, Sun, Menu, X, Code2, Layers, Cloud, 
   Rocket, Shield, Zap, ArrowRight, Star,
@@ -54,6 +54,7 @@ export default function Home() {
     company: '',
     message: ''
   })
+  const formLoadedAtRef = useRef<number | null>(null)
 
   useEffect(() => {
     if (darkMode) {
@@ -63,14 +64,21 @@ export default function Home() {
     }
   }, [darkMode])
 
+  useEffect(() => {
+    formLoadedAtRef.current = Date.now()
+  }, [])
+
   const handleSubmit = async (e: FormData) => {
+    if (e.get('email2')) return
     const value: ContactFormValue = Object.fromEntries(e.entries()) as ContactFormValue
+    const loadedAt = formLoadedAtRef.current
+    if (loadedAt != null && Date.now() - loadedAt < 2000) return
     await fetch('/api/send', {
       method: 'POST',
       headers: new Headers([
         ['Content-Type', 'application/json']
       ]),
-      body: JSON.stringify(value)
+      body: JSON.stringify({ ...value, _loadedAt: loadedAt })
     })
   }
 
@@ -444,7 +452,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
-              <form action={handleSubmit} className="space-y-6">
+              <form action={handleSubmit} className="relative space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium mb-2">
                     Full Name *
@@ -498,6 +506,18 @@ export default function Home() {
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition resize-none"
                     placeholder="Tell us about your project..."
                   ></textarea>
+                </div>
+
+                <div
+                  className="absolute opacity-0 pointer-events-none -z-10 h-0 w-0 overflow-hidden"
+                  aria-hidden
+                >
+                  <input
+                    type="text"
+                    name="email2"
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
                 </div>
 
                 <button
