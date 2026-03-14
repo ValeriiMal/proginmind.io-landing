@@ -726,6 +726,7 @@ export default function Home() {
                 <li><a href="#testimonials" className="hover:text-blue-400 transition">Testimonials</a></li>
                 <li><a href="#contact" className="hover:text-blue-400 transition">Contact</a></li>
                 <li><a href="/products/wellness-manage" className="hover:text-teal-400 transition">Wellness Manage</a></li>
+                <li><a href="https://blog.proginmind.io" className="hover:text-blue-400 transition">Blog</a></li>
               </ul>
             </div>
 
