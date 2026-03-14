@@ -5,7 +5,7 @@ import {
   Moon, Sun, Menu, X, Code2, Layers, Cloud, 
   Rocket, Shield, Zap, ArrowRight, Star,
   Github, Linkedin, Twitter, Mail, Phone, MapPin,
-  CheckCircle2, LucideIcon
+  CheckCircle2, ChevronDown, LucideIcon
 } from 'lucide-react'
 import { ContactFormValue } from './types'
 
@@ -29,6 +29,7 @@ interface Project {
   description: string
   tech: string[]
   image: string
+  link?: string
 }
 
 interface Testimonial {
@@ -48,6 +49,9 @@ interface SocialLink {
 export default function Home() {
   const [darkMode, setDarkMode] = useState<boolean>(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false)
+  const [mobileProductsOpen, setMobileProductsOpen] = useState<boolean>(false)
+  const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
+  const [formError, setFormError] = useState<boolean>(false)
   const [formData, setFormData] = useState<FormValue>({
     name: '',
     email: '',
@@ -73,13 +77,21 @@ export default function Home() {
     const value: ContactFormValue = Object.fromEntries(e.entries()) as ContactFormValue
     const loadedAt = formLoadedAtRef.current
     if (loadedAt != null && Date.now() - loadedAt < 2000) return
-    await fetch('/api/send', {
-      method: 'POST',
-      headers: new Headers([
-        ['Content-Type', 'application/json']
-      ]),
-      body: JSON.stringify({ ...value, _loadedAt: loadedAt })
-    })
+    setFormError(false)
+    try {
+      const res = await fetch('/api/send', {
+        method: 'POST',
+        headers: new Headers([['Content-Type', 'application/json']]),
+        body: JSON.stringify({ ...value, _loadedAt: loadedAt })
+      })
+      if (res.ok) {
+        setFormSubmitted(true)
+      } else {
+        setFormError(true)
+      }
+    } catch {
+      setFormError(true)
+    }
   }
 
   const services: Service[] = [
@@ -122,6 +134,14 @@ export default function Home() {
   ]
 
   const projects: Project[] = [
+    {
+      title: 'Wellness Manage',
+      category: 'SaaS Product',
+      description: 'All-in-one management platform for wellness centers — appointments, clients, staff, and revenue tracking in a single place.',
+      tech: ['Next.js', 'Supabase', 'Stripe', 'TypeScript'],
+      image: 'bg-gradient-to-br from-teal-400 to-emerald-500',
+      link: '/products/wellness-manage'
+    },
     {
       title: 'FinTech Dashboard',
       category: 'Web Application',
@@ -215,6 +235,21 @@ export default function Home() {
               <a href="#testimonials" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
                 Testimonials
               </a>
+              <div className="relative group">
+                <button className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
+                  <span>Products</span>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+                <div className="absolute top-full left-0 mt-2 w-52 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <a
+                    href="/products/wellness-manage"
+                    className="flex items-center space-x-2 px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl"
+                  >
+                    <span className="w-2 h-2 bg-teal-500 rounded-full flex-shrink-0"></span>
+                    <span>Wellness Manage</span>
+                  </a>
+                </div>
+              </div>
               <a href="#contact" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
                 Contact
               </a>
@@ -266,6 +301,27 @@ export default function Home() {
               <a href="#testimonials" className="block py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600" onClick={() => setMobileMenuOpen(false)}>
                 Testimonials
               </a>
+              <div>
+                <button
+                  className="flex items-center space-x-1 w-full py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600"
+                  onClick={() => setMobileProductsOpen(!mobileProductsOpen)}
+                >
+                  <span>Products</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${mobileProductsOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {mobileProductsOpen && (
+                  <div className="pl-4 mt-1 space-y-1">
+                    <a
+                      href="/products/wellness-manage"
+                      className="flex items-center space-x-2 py-2 text-teal-600 dark:text-teal-400 font-medium"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <span className="w-2 h-2 bg-teal-500 rounded-full flex-shrink-0"></span>
+                      <span>Wellness Manage</span>
+                    </a>
+                  </div>
+                )}
+              </div>
               <a href="#contact" className="block py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600" onClick={() => setMobileMenuOpen(false)}>
                 Contact
               </a>
@@ -377,31 +433,58 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {projects.map((project, index) => (
-              <div
-                key={index}
-                className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
-              >
-                <div className={`h-48 ${project.image} flex items-center justify-center relative overflow-hidden`}>
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition"></div>
-                  <span className="text-white text-lg font-semibold z-10">{project.category}</span>
-                </div>
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold mb-3">{project.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">{project.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {project.tech.map((tech, idx) => (
-                      <span
-                        key={idx}
-                        className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm rounded-full"
-                      >
-                        {tech}
+            {projects.map((project, index) => {
+              const cardContent = (
+                <>
+                  <div className={`h-48 ${project.image} flex items-center justify-center relative overflow-hidden`}>
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition"></div>
+                    <span className="text-white text-lg font-semibold z-10">{project.category}</span>
+                    {project.link && (
+                      <span className="absolute top-3 right-3 z-10 px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-xs font-medium rounded-full border border-white/30">
+                        Our Product
                       </span>
-                    ))}
+                    )}
                   </div>
+                  <div className="p-8">
+                    <h3 className="text-2xl font-bold mb-3">{project.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">{project.description}</p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.tech.map((tech, idx) => (
+                        <span
+                          key={idx}
+                          className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm rounded-full"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                    {project.link && (
+                      <span className="inline-flex items-center space-x-1 text-teal-600 dark:text-teal-400 text-sm font-medium group-hover:underline">
+                        <span>View product page</span>
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+                      </span>
+                    )}
+                  </div>
+                </>
+              )
+
+              return project.link ? (
+                <a
+                  key={index}
+                  href={project.link}
+                  className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 block"
+                >
+                  {cardContent}
+                </a>
+              ) : (
+                <div
+                  key={index}
+                  className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                >
+                  {cardContent}
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>
@@ -452,81 +535,102 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
-              <form action={handleSubmit} className="relative space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition"
-                    placeholder="John Doe"
-                  />
+              {formSubmitted ? (
+                <div className="flex flex-col items-center justify-center h-full py-12 text-center">
+                  <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-6">
+                    <CheckCircle2 className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3">Message sent!</h3>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Thanks for reaching out. We&apos;ll review your message and get back to you as soon as possible.
+                  </p>
                 </div>
+              ) : (
+                <form action={handleSubmit} className="relative space-y-6">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium mb-2">
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      required
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition"
+                      placeholder="John Doe"
+                    />
+                  </div>
 
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium mb-2">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition"
-                    placeholder="john@company.com"
-                  />
-                </div>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium mb-2">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition"
+                      placeholder="john@company.com"
+                    />
+                  </div>
 
-                <div>
-                  <label htmlFor="company" className="block text-sm font-medium mb-2">
-                    Company Name
-                  </label>
-                  <input
-                    type="text"
-                    id="company"
-                    name="company"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition"
-                    placeholder="Your Company"
-                  />
-                </div>
+                  <div>
+                    <label htmlFor="company" className="block text-sm font-medium mb-2">
+                      Company Name
+                    </label>
+                    <input
+                      type="text"
+                      id="company"
+                      name="company"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition"
+                      placeholder="Your Company"
+                    />
+                  </div>
 
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium mb-2">
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    rows={5}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition resize-none"
-                    placeholder="Tell us about your project..."
-                  ></textarea>
-                </div>
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium mb-2">
+                      Message *
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      required
+                      rows={5}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition resize-none"
+                      placeholder="Tell us about your project..."
+                    ></textarea>
+                  </div>
 
-                <div
-                  className="absolute opacity-0 pointer-events-none -z-10 h-0 w-0 overflow-hidden"
-                  aria-hidden
-                >
-                  <input
-                    type="text"
-                    name="email2"
-                    tabIndex={-1}
-                    autoComplete="off"
-                  />
-                </div>
+                  <div
+                    className="absolute opacity-0 pointer-events-none -z-10 h-0 w-0 overflow-hidden"
+                    aria-hidden
+                  >
+                    <input
+                      type="text"
+                      name="email2"
+                      tabIndex={-1}
+                      autoComplete="off"
+                    />
+                  </div>
 
-                <button
-                  type="submit"
-                  className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition"
-                >
-                  Send Message
-                </button>
-              </form>
+                  {formError && (
+                    <p className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-lg">
+                      Something went wrong. Please try again or email us directly at{' '}
+                      <a href="mailto:info@proginmind.io" className="underline font-medium">
+                        info@proginmind.io
+                      </a>
+                    </p>
+                  )}
+
+                  <button
+                    type="submit"
+                    className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition"
+                  >
+                    Send Message
+                  </button>
+                </form>
+              )}
             </div>
 
             {/* Contact Info */}
@@ -621,6 +725,7 @@ export default function Home() {
                 <li><a href="#portfolio" className="hover:text-blue-400 transition">Portfolio</a></li>
                 <li><a href="#testimonials" className="hover:text-blue-400 transition">Testimonials</a></li>
                 <li><a href="#contact" className="hover:text-blue-400 transition">Contact</a></li>
+                <li><a href="/products/wellness-manage" className="hover:text-teal-400 transition">Wellness Manage</a></li>
               </ul>
             </div>
 
