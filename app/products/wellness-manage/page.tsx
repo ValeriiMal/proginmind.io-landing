@@ -1,12 +1,30 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
 import {
   Moon, Sun, Menu, X, Code2, ArrowRight, ChevronDown,
   Calendar, Users, UserCheck, BarChart3, Tag, Mail,
   Globe, FileText, Smartphone, CheckCircle2, Zap, Heart, Shield
 } from 'lucide-react'
 import { ContactFormValue } from '@/app/types'
+
+const productScreenshots = [
+  {
+    src: '/images/wellness-manage/dashboard-overview.jpg',
+    alt: 'Wellness Manage dashboard with KPI cards and upcoming appointments schedule',
+    title: 'Your business at a glance',
+    description:
+      'Real-time metrics for clients, revenue, and staff — plus a clear view of upcoming appointments.',
+  },
+  {
+    src: '/images/wellness-manage/analytics-charts.jpg',
+    alt: 'Wellness Manage analytics with appointment status and revenue by category charts',
+    title: 'Insights that drive growth',
+    description:
+      'Track appointment outcomes and see which services generate the most revenue.',
+  },
+] as const
 
 export default function WellnessManagePage() {
   const [darkMode, setDarkMode] = useState<boolean>(false)
@@ -306,10 +324,37 @@ export default function WellnessManagePage() {
               Wellness Manage
             </h1>
 
-            <p className="text-2xl sm:text-3xl font-semibold text-teal-700 dark:text-teal-300 mb-5">
+            <p className="text-2xl sm:text-3xl font-semibold text-teal-700 dark:text-teal-300 mb-10">
               All-in-one management for wellness centers
             </p>
+          </div>
 
+          <div className="mx-auto mb-12 flex max-w-4xl flex-col gap-10">
+            {productScreenshots.map((screenshot) => (
+              <figure key={screenshot.src} className="text-center">
+                <div className="relative overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-2xl shadow-teal-900/10 ring-1 ring-black/5 dark:border-gray-700/80 dark:bg-gray-800 dark:shadow-black/30">
+                  <Image
+                    src={screenshot.src}
+                    alt={screenshot.alt}
+                    width={1200}
+                    height={750}
+                    priority
+                    className="h-auto w-full"
+                  />
+                </div>
+                <figcaption className="mt-4 px-1">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    {screenshot.title}
+                  </h2>
+                  <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                    {screenshot.description}
+                  </p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+
+          <div className="text-center max-w-4xl mx-auto">
             <p className="text-xl text-gray-600 dark:text-gray-300 mb-10 leading-relaxed max-w-3xl mx-auto">
               Schedule appointments, manage clients and staff, and track your revenue — all in one place.
               Built for massage studios, yoga centers, physiotherapy practices, and more.

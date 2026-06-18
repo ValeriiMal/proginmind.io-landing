@@ -12,16 +12,23 @@ A modern, professional landing page for a software development studio built with
 
 ## Getting Started
 
-First, install the dependencies:
+### Prerequisites
+
+- Node.js 22.x (LTS) — specified in `.nvmrc`
+- pnpm 10.x or higher
+- nvm (recommended for Node.js version management)
+
+First, use the correct Node.js version and install dependencies:
 
 ```bash
-npm install
+nvm use
+pnpm install
 ```
 
 Then, run the development server:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -29,12 +36,13 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Build for Production
 
 ```bash
-npm run build
-npm start
+pnpm build
+pnpm start
 ```
 
 ## Tech Stack
 
+- Node.js 22 (LTS)
 - Next.js 16.1.6 (App Router)
 - React 19
 - TypeScript 5.7
